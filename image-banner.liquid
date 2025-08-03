@@ -1,0 +1,268 @@
+"{% assign product = all_products['neoric-neon'] %}
+
+{% schema %}
+{
+  "name": "NEORIC",
+  "settings": [
+    { "type": "image_picker", "id": "main_image", "label": "Hauptbild" },
+    { "type": "image_picker", "id": "thumb1", "label": "Thumbnail 1" },
+    { "type": "image_picker", "id": "thumb2", "label": "Thumbnail 2" },
+    { "type": "image_picker", "id": "thumb3", "label": "Thumbnail 3" },
+    { "type": "image_picker", "id": "thumb4", "label": "Thumbnail 4" }
+    ],
+  "presets": [
+    { "name": "NEORIC" }
+  ]
+}
+{% endschema %}
+
+{{ 'styles.css' | asset_url | stylesheet_tag }}
+
+<div class="announcement">HEUTE VERSANDKOSTENFREI!</div>
+
+ <header class="menu-bar">
+    <div class="logo">
+      <img src="{{ 'logo-neoric_10c0843e-64e6-440c-93d1-9e96932fad90_360x.png' | asset_url }}" alt="Logo" width="120" height="40">
+    </div>
+
+    <nav class="menu-nav">
+      <a href="{{ routes.collections_url }}/wristband">Neon Armband™</a>
+      <a href="{{ routes.pages_url }}/size-chart">Größentabelle</a>
+      <a href="{{ routes.pages_url }}/delivery">Versand</a>
+      <a href="{{ routes.pages_url }}/contact">Kontakt</a>
+    </nav>
+
+    <div class="cart-icon">
+      <a href="{{ routes.cart_url }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.97716 9.8398C4.06066 8.8007 4.92828 8 5.97073 8H18.0293C19.0717 8 19.9393 8.8007 20.0228 9.8398L20.8264 19.8398C20.9199 21.0038 20.0006 22 18.8328 22H5.16716C3.99943 22 3.08005 21.0038 3.17359 19.8398L3.97716 9.8398Z" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 11V6C16 3.79086 14.2091 2 12 2V2C9.79086 2 8 3.79086 8 6V11" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="cart-count" style="display:none;">0</span>
+      </a>
+    </div>
+
+      <button class="burger" aria-label="Menü öffnen">
+  <span class="bar"></span>
+  <span class="bar"></span>
+  <span class="bar"></span>
+</button>
+
+     <nav id="mobile-menu" class="mobile-menu" hidden>
+    <a href="{{ routes.collections_url }}/wristband">Neon Armband™</a>
+    <a href="{{ routes.pages_url }}/size-chart">Größentabelle</a>
+    <a href="{{ routes.pages_url }}/delivery">Versand</a>
+    <a href="{{ routes.pages_url }}/contact">Kontakt</a>
+  </nav>
+  </header>
+
+<section class="product-page">
+  
+  <div class="product">
+    <div class="thumbnails">
+      {% for i in (1..4) %}
+        {% assign key = 'thumb' | append: i %}
+        {% assign img = section.settings[key] %}
+        {% if img %}
+          <img
+            class="thumbnail"
+            src="{{ img | img_url: '100x100' }}"
+            data-full="{{ img | img_url: '480x480' }}"
+            alt="Thumbnail {{ i }}"
+            width="60" height="60"
+          >
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  <div class="product-scroll">
+      {% if section.settings.main_image %}
+        <div class="main-product">
+          <img src="{{ section.settings.main_image | img_url: '400x400' }}" alt="Produktbild Hauptbild">
+        </div>
+      {% endif %}
+
+      {% for i in (1..4) %}
+        {% assign key = 'thumb' | append: i %}
+        {% assign img = section.settings[key] %}
+        {% if img %}
+          <div class="main-product">
+            <img src="{{ img | img_url: '400x400' }}" alt="Produktbild {{ i }}">
+          </div>
+        {% endif %}
+      {% endfor %}
+</div>
+
+    <div class="main-product">
+      {% if section.settings.main_image %}
+        <img
+          id="main-product-image"
+          src="{{ section.settings.main_image | img_url: '480x480' }}"
+          alt="Hauptbild"
+          width="300" height="300"
+        >
+
+        <div class="image-navigation">
+          <button id="prev-image" aria-label="Vorheriges Bild">&lt;</button>
+          <button id="next-image" aria-label="Nächstes Bild">&gt;</button>
+        </div>
+
+      {% else %}
+        <p>Kein Hauptbild gewählt</p>
+      {% endif %}
+    </div>
+
+    <div class="info-card">
+      <h2>{{ product.title }}</h2>
+
+      <p class="description">{{ product.description | strip_html }}</p>
+      
+      <div class="price-row">
+        {% if product.compare_at_price > product.price %}
+          <p class="normal-price">{{ product.compare_at_price | money }}</p>
+        {% endif %}
+          <p class="discounted-price">
+        {{ product.price | money }} <span class="tax">inkl. MwSt.</span>
+        </p>
+      </div>
+
+      <p class="available">🟢 Auf Lager, in 2–3 Tagen bei dir</p>
+
+      {% if product %}
+        <form method="post" action="/cart/add" class="product-form">
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          <button type="submit" class="btn-cart">In den Einkaufswagen</button>
+        </form>
+      {% else %}
+        <p><em>Produkt mit Handle „neoric-neon“ nicht gefunden.</em></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="quality">
+    {% for i in (1..3) %}
+      <div class="item">
+        <img src="{{ 'icon-quality.svg' | asset_url }}" alt="Qualität" width="40" height="40">
+        <p>100 % Qualität<br>Dank weichem Silikon</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainImg = document.getElementById('main-product-image');
+    const thumbs = Array.from(document.querySelectorAll('.thumbnail'));
+    const countEl = document.getElementById('cart-count');
+
+    if (!mainImg) return;
+
+    // Erstelle Array mit allen Bildern: Hauptbild + Thumbnails
+    const images = [
+      '{{ section.settings.main_image | img_url: "480x480" }}',
+      {% for i in (1..4) %}
+        {% assign key = 'thumb' | append: i %}
+        {% assign img = section.settings[key] %}
+        {% if img %}
+          '{{ img | img_url: "480x480" }}'{% unless forloop.last %},{% endunless %}
+        {% endif %}
+      {% endfor %}
+    ];
+
+    let currentIndex = 0;
+
+    function updateMainImage(index) {
+      currentIndex = index;
+      mainImg.src = images[currentIndex];
+
+    
+      thumbs.forEach((thumb, i) => {
+        thumb.classList.toggle('active', (i + 1) === currentIndex);
+      });
+    }
+
+    // Pfeil links
+    document.getElementById('prev-image').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateMainImage(currentIndex);
+    });
+
+    // Pfeil rechts
+    document.getElementById('next-image').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateMainImage(currentIndex);
+    });
+
+    // Klick auf Thumbnails
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => {
+        updateMainImage(i + 1);
+      });
+    });
+
+    // Starte mit Hauptbild
+    updateMainImage(0);
+
+    // AJAX Add to Cart (kein Seitenwechsel)
+    const form = document.querySelector('.product-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Fehler beim Hinzufügen zum Warenkorb');
+          return response.json();
+        })
+        .then(data => {
+          alert('Produkt wurde zum Warenkorb hinzugefügt!');
+          // Warenkorb-Zähler aktualisieren
+          fetch('/cart.js')
+            .then(res => res.json())
+            .then(cart => {
+              if (cart.item_count > 0) {
+                countEl.textContent = cart.item_count;
+                countEl.style.display = 'inline-block';
+              } else {
+                countEl.style.display = 'none';
+              }
+            });
+        })
+        .catch(err => {
+          alert('Fehler: ' + err.message);
+        });
+      });
+    }
+
+    // Initialer Warenkorb-Zähler
+    fetch('/cart.js')
+      .then(res => res.json())
+      .then(cart => {
+        if (cart.item_count > 0) {
+          countEl.textContent = cart.item_count;
+          countEl.style.display = 'inline-block';
+        }
+      });
+  });
+
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const burger = document.querySelector('.burger');
+    const menuNav = document.querySelector('.menu-nav');
+
+    if (burger && menuNav) {
+      burger.addEventListener('click', () => {
+        menuNav.classList.toggle('active');
+      });
+    }
+  });
+</script>
+
+
